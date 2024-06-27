@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "nl.lankreijer.hotbar3x3.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "InGameHudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

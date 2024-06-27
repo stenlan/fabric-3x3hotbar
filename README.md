@@ -1,9 +1,9 @@
-# Fabric Example Mod
+# Fabric 3x3 Hotbar
 
-## Setup
+## Description
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+Adds a configurable 3x3 hotbar to your game. Configure under the Mods menu.
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This project is licensed under the CC BY-NC-SA 4.0 license.

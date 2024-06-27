@@ -1,31 +1,30 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "hotbar3x3",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "3x3 Hotbar",
+	"description": "Adds a configurable 3x3 hotbar to your game",
 	"authors": [
-		"Me!"
+		"stenlan"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/stenlan/fabric-3x3hotbar",
+		"sources": "https://github.com/stenlan/fabric-3x3hotbar"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"license": "CC BY-NC-SA 4.0",
+	"icon": "assets/hotbar3x3/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"com.example.ExampleMod"
-		],
 		"client": [
-			"com.example.ExampleModClient"
+          "nl.lankreijer.hotbar3x3.Hotbar3x3Client"
+		],
+		"modmenu": [
+			"nl.lankreijer.hotbar3x3.config.Hotbar3x3ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
 		{
-			"config": "modid.client.mixins.json",
+			"config": "3x3hotbar.client.mixins.json",
 			"environment": "client"
 		}
 	],
@@ -33,9 +32,8 @@
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.21",
 		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
+		"fabric-api": "*",
+		"cloth-config": "~15.0",
+		"modmenu": "~11.0.1"
 	}
 }
