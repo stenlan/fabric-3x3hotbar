@@ -107,4 +107,5 @@ modrinth {
 		required.project 'cloth-config'
 		required.project 'modmenu'
 	}
+	syncBodyFrom = rootProject.file("README.md").text
 }
