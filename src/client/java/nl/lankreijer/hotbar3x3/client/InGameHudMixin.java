@@ -3,6 +3,7 @@ package nl.lankreijer.hotbar3x3.client;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Function;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
@@ -123,11 +126,11 @@ public abstract class InGameHudMixin {
 		}
 	}
 
-	@Redirect(method="renderHotbar", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0))
-	private void drawHotbarTexture(DrawContext context, Identifier _texture, int _x, int _y, int _width, int _height) {
+	@Redirect(method="renderHotbar", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0))
+	private void drawHotbarTexture(DrawContext context, Function<Identifier, RenderLayer> renderLayers, Identifier _texture, int _x, int _y, int _width, int _height) {
 		int centerX = context.getScaledWindowWidth() / 2;
 		if (this.hotbarConfig.hotbarMode == Hotbar3x3Config.HotbarMode.VANILLA) {
-			context.drawGuiTexture(HOTBAR_TEXTURE, centerX - SINGLE_HOTBAR_WIDTH / 2, context.getScaledWindowHeight() - SINGLE_HOTBAR_HEIGHT, SINGLE_HOTBAR_WIDTH, SINGLE_HOTBAR_HEIGHT);
+			context.drawGuiTexture(renderLayers, HOTBAR_TEXTURE, centerX - SINGLE_HOTBAR_WIDTH / 2, context.getScaledWindowHeight() - SINGLE_HOTBAR_HEIGHT, SINGLE_HOTBAR_WIDTH, SINGLE_HOTBAR_HEIGHT);
 		} else {
 			context.drawBorder(
 					get3x3HotbarTopLeftX(context), get3x3HotbarTopLeftY(context),
@@ -135,7 +138,7 @@ public abstract class InGameHudMixin {
 					0xFF000000
 			);
 			for (int row = 0; row < 3; row++) {
-				context.drawGuiTexture(HOTBAR_TEXTURE,
+				context.drawGuiTexture(renderLayers, HOTBAR_TEXTURE,
 						SINGLE_HOTBAR_WIDTH /* source texture width */, SINGLE_HOTBAR_HEIGHT /* source texture height */,
 						HOTBAR_BORDER_THICKNESS + row * SINGLE_HOTBAR_WIDTH_BORDERLESS / 3 /* u */ , HOTBAR_BORDER_THICKNESS /* v */,
 						get3x3HotbarTopLeftX(context) + HOTBAR_BORDER_THICKNESS, get3x3HotbarTopLeftY(context) + HOTBAR_BORDER_THICKNESS + row * HOTBAR_SLOT_SIZE,
@@ -145,15 +148,16 @@ public abstract class InGameHudMixin {
 		}
 	}
 
-	@Redirect(method="renderHotbar", at=@At(value="INVOKE", target="Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 1))
-	private void drawHotbarSelectionTexture(DrawContext context, Identifier _texture, int _x, int _y, int _width, int _height) {
+	@Redirect(method="renderHotbar", at=@At(value="INVOKE", target="Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIII)V", ordinal = 1))
+	private void drawHotbarSelectionTexture(DrawContext context, Function<Identifier, RenderLayer> renderLayers, Identifier _texture, int _x, int _y, int _width, int _height) {
 		int selectedSlot = this.getCameraPlayer().getInventory().selectedSlot;
 
 		context.drawGuiTexture(
-				HOTBAR_SELECTION_TEXTURE,  getHotbarSlotTopLeftX(context, selectedSlot) - 2, getHotbarSlotTopLeftY(context, selectedSlot) - 2, 24, 23
+				renderLayers, HOTBAR_SELECTION_TEXTURE,  getHotbarSlotTopLeftX(context, selectedSlot) - 2, getHotbarSlotTopLeftY(context, selectedSlot) - 2, 24, 23
 		);
 
 		context.drawGuiTexture( // draw bottom border using top border of selection texture
+				renderLayers,
 				HOTBAR_SELECTION_TEXTURE,
 				24, 23,
 				0, 0,
